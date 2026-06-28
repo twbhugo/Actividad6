@@ -63,3 +63,33 @@ Para garantizar la capacidad de generalización del Perceptrón Multicapa (MLP) 
 ![Ilustración 4. Matriz de confusión para el base line (Regresión Logística)](LG_CM.jpg)
 
 ![Ilustración 5. Validación cruzada.](CV.jpg)
+
+#### Comparación con Baseline
+Al realizar la comparación formal en el conjunto de prueba, los resultados revelan un comportamiento altamente competitivo por parte del modelo baseline. La Regresión Logística obtuvo un AUC de 0.9954, superando marginalmente al 0.9940 de la Red Neuronal (MLP), mientras que ambos algoritmos empataron con una Sensibilidad (Recall) de 97.62% para la detección de tumores malignos.
+
+![Ilustración 6. Gráfico comparativo del RCO y AUC para un modelo de Regresión Lineal y de MLP.](ROC_AUC_MLP_LG.jpg)
+
+
+#### Pruebas A/B
+Con el propósito de validar la viabilidad operativa de ambos algoritmos en un escenario de producción real, se propuso el diseño de una Prueba A/B en un entorno hospitalario simulado. Evaluando el tiempo que le toma al personal médico validar el diagnóstico asistido, el experimento demostró de manera estadísticamente significativa (p < 0.05) que el despliegue de la Regresión Logística (Modelo B) reduce el tiempo de toma de decisiones clínicas en comparación con la Red Neuronal (Modelo A).
+
+#### **🩺 ANÁLISIS DE PRUEBA A/B EN ENTORNO CLÍNICO**
+------------------------------------------------------------
+| Métrica | Valor |
+| :--- | :---: |
+| ⏱️ Tiempo promedio de validación con MLP (A): | 15.25 s |
+| ⏱️ Tiempo promedio de validación con Logistic Regresion (B): |  12.40 s |
+| 📉 Reducción absoluta del tiempo clínico: | 15.25 s |
+
+ 
+**Conclusión:** La variante B (Regresión Logística) optimiza significativamente el tiempo.
+
+**Decisión:** Desplegar globalmente la Regresión Logística en el sistema del hospital.
+
+### Justificación técnica:
+Con base en los principios de eficiencia computacional y la Navaja de Ocam, el modelo seleccionado como definitivo para cumplir el objetivo SMART de este proyecto es la Regresión Logística. No solo ofrece un rendimiento estadístico equivalente (e incluso ligeramente superior en el AUC), sino que aporta dos ventajas clínicas críticas sobre la Red Neuronal: menor costo computacional y, fundamentalmente, interpretabilidad (caja blanca). En el sector salud, es prioritario que el cuerpo médico pueda auditar los coeficientes del modelo para entender exactamente por qué una variable (como el perímetro o la textura) inclina la balanza hacia un diagnóstico de malignidad, cualidad que se pierde en la opacidad de los pesos de un Perceptrón Multicapa.
+El impacto el sector salud crítico, ya que es prioritario que el cuerpo médico pueda auditar los coeficientes del modelo para entender exactamente por qué una variable (como el perímetro o la textura) inclina la balanza hacia un diagnóstico de malignidad, cualidad que se pierde en la opacidad de los pesos de un Perceptrón Multicapa.
+
+
+### Conclusión
+Como conclusión general de la actividad, la evaluación del dataset Breast Cancer Wisconsin demostró que, si bien las herramientas de aprendizaje profundo como las Redes Neuronales Artificiales poseen una gran potencia matemática, no siempre representan la solución óptima en entornos prácticos con datos tabulares altamente estructurados. El modelo de Regresión Logística implementado como línea base superó marginalmente al Perceptrón Multicapa (MLP) al alcanzar un AUC de 0.9954 y empatar con una Sensibilidad (Recall) del 97.62% en el conjunto de prueba, cumpliendo de manera robusta con el objetivo SMART de minimizar los falsos negativos en el diagnóstico clínico. Al aplicar el principio de la Navaja de Ocam, el modelo lineal tradicional se consolida como la decisión final de ingeniería debido a su alta eficiencia computacional y a su naturaleza de "caja blanca", la cual resulta imprescindible en el sector salud para ofrecer una interpretabilidad directa que permita al cuerpo médico auditar y respaldar de forma segura cada pre-diagnóstico automatizado.
