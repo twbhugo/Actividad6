@@ -18,3 +18,48 @@ Para la resolución de este problema de optimización, se implementó una Red Ne
 #### Matriz de confusión 
 La matriz de confusión es importante porque nos dice en que acertó exactamente el modelo y en que se equivocó, al hacer una referencia de los malignos/benignos de la predicción con los malignos/benignos de los verdaderos. En medicina, el error más costoso es el Falso Negativo (clasificar un tumor maligno como benigno), ya que retrasa el tratamiento de la paciente. A continuación, se muestra la matriz de confusión para un modelo MLP (Perceptrón Multi Capa).
 
+![Ilustración 1. Matriz de confusión](MLP_CM.jpg)
+
+De acuerdo con lo que podemos observar en la matriz, el modelo MLP predijo los siguiente:
+* Verdaderos Negativos: (Maligno -> Maligno):  41
+* Falsos Positivos: (Maligno -> Benigno):  1
+* Falsos Negativos: (Benigno -> Maligno):  4
+* Verdaderos Positivos: (Benigno -> Benigno):  68 
+
+#### Métricas
+
+| Métrica | Valor | Descripción e interpretación |
+| :--- | :---: | :---: |
+| **Accuracy** | 95.61% | Es el porcentaje total de predicciones correctas realizadas por el modelo (tanto benignos como malignos). |
+| **Precission** | 98.55% | Mide cuántos de los casos que el modelo predijo como positivos, realmente lo eran. Si la precisión para malignos es del 95%, significa que cuando el modelo genera una alerta de tumor maligno, hay un 95% de probabilidad de que sea real y un 5% de que sea una falsa alarma (Falso Positivo). |
+| **Recall** | 96.45% | Mide la capacidad del modelo para encontrar todos los casos positivos reales. En nuestro contexto, mide qué porcentaje de tumores malignos fueron correctamente detectados. |
+| **F1-Score** | 94.44% | Es el promedio armónico entre la Precission y el Recall, ya que nos da un indicador global de qué tan balanceado es el rendimiento del modelo en cada clase. |
+	
+#### Ajuste de umbral
+Por defecto, los modelos de clasificación asignan una muestra a la clase positiva si la probabilidad calculada es mayor a 0.5 (50%). Sin embargo, en la detección de cáncer de mama, esperar a que el modelo esté un 50% seguro puede dejar fuera casos de riesgo. Mover este umbral nos permite volver al modelo mucho más "estricto" o sensible.
+
+* Verdaderos Negativos: (Maligno -> Maligno):  41
+* Falsos Positivos: (Maligno -> Benigno):   1
+* Falsos Negativos: (Benigno -> Maligno):   5
+* Verdaderos Positivos: (Benigno -> Benigno):  67
+
+Como podemos observar en la matriz de confusión con el umbral ajustado, el modelo se volvió mas estricto y clasifico, en este data set, un caso mas como maligno, cuando era benigno.
+
+![Ilustración 2. Matriz de confusión con umbral ajustado al 20%. Matriz de confusión](MLP_CM_20.jpg)
+
+
+#### ROC
+La curva ROC es un gráfico que contrasta la Tasa de Verdaderos Positivos (Sensibilidad) en el eje Y contra la Tasa de Falsos Positivos (1 - Especificidad) en el eje X, a medida que se varía el umbral de decisión desde 0 hasta 1.En términos clínicos, visualiza el "costo-beneficio": qué tanta sensibilidad ganamos para salvar pacientes (subir en el eje Y) a cambio de aceptar más falsas alarmas médicas (movernos a la derecha en el eje X).El "modelo perfecto" se vería como una línea que sube verticalmente hasta el rincón superior izquierdo (0,1) y luego se desplaza horizontalmente.
+
+#### AUC
+El AUC es el indicador numérico que resume toda la curva ROC. Mide la probabilidad de que el modelo ordene correctamente una muestra positiva elegida al azar por encima de una muestra negativa elegida al azar. AUC = 1.0: Clasificador perfecto. AUC = 0.5: Clasificador aleatorio (la línea punteada diagonal). Equivale a lanzar una moneda al aire para diagnosticar a la paciente.
+
+![Ilustración 3. AUC y ROC.](ROC_AUC_MLP.jpg)
+
+
+#### Validación cruzada
+Para garantizar la capacidad de generalización del Perceptrón Multicapa (MLP) y mitigar el riesgo de sobreajuste o sesgo en la división inicial de los datos, se implementó una Validación Cruzada Estratificada de 5 pliegues (5-Fold Cross-Validation). El modelo demostró una consistencia sobresaliente, alcanzando un Área Bajo la Curva (AUC) promedio de 99.40% (\pm 1.01%), registrando incluso un desempeño perfecto de 1.0 en el primer y cuarto pliegue. 
+
+![Ilustración 4. Matriz de confusión para el base line (Regresión Logística)](LG_CM.jpg)
+
+![Ilustración 5. Validación cruzada.](CV.jpg)
